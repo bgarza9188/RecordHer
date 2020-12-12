@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.example.trigmvvm.ui.main.MainFragment
 
@@ -13,6 +16,32 @@ class MainActivity : AppCompatActivity() {
     // Requesting permission to RECORD_AUDIO
     private var permissionToRecordAccepted = false
     private var permissions: Array<String> = arrayOf(Manifest.permission.RECORD_AUDIO)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val nightMode = AppCompatDelegate.getDefaultNightMode()
+        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            menu?.findItem(R.id.night_mode)?.setTitle(R.string.day_mode)
+        } else {
+            menu?.findItem(R.id.night_mode)?.setTitle(R.string.night_mode)
+        }
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.night_mode) {
+            val nightMode = AppCompatDelegate.getDefaultNightMode()
+            if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            // Recreate the activity for the theme change to take effect.
+            recreate()
+        }
+        return true
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
