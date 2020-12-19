@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.example.trigmvvm.ui.main.MainFragment
+import com.example.trigmvvm.ui.main.SplashFragment
 
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 
@@ -64,9 +66,15 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
+                    .replace(R.id.container, SplashFragment.newInstance())
                     .commitNow()
         }
+    }
 
+    fun moveToNext() {
+        Log.d("Main Acitivity","Splash screen stopped")
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, MainFragment.newInstance())
+            .commitNow()
     }
 }

@@ -1,8 +1,5 @@
 package com.example.trigmvvm.ui.main
 
-import android.Manifest
-import android.animation.ObjectAnimator
-import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
@@ -11,9 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.activityViewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.trigmvvm.R
 import kotlinx.android.synthetic.main.main_fragment.*
 import java.io.IOException
@@ -26,11 +21,17 @@ class MainFragment : Fragment() {
 
     private var player: MediaPlayer? = null
 
-
-
-
     companion object {
         fun newInstance() = MainFragment()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        // Take instance of Action Bar
+        // using getSupportActionBar and
+        // if it is not Null
+        // then call hide function
+        (activity as AppCompatActivity).supportActionBar?.show()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
