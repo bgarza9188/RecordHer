@@ -1,6 +1,7 @@
 package com.example.trigmvvm
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,11 +14,15 @@ import com.example.trigmvvm.ui.main.MainFragment
 import com.example.trigmvvm.ui.main.SplashFragment
 
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
+const val PREFS_NAME = "theme_prefs"
+const val KEY_THEME = "prefs.theme"
+const val THEME_UNDEFINED = -1
 
 class MainActivity : AppCompatActivity() {
     // Requesting permission to RECORD_AUDIO
     private var permissionToRecordAccepted = false
     private var permissions: Array<String> = arrayOf(Manifest.permission.RECORD_AUDIO)
+    private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -36,8 +41,10 @@ class MainActivity : AppCompatActivity() {
             val nightMode = AppCompatDelegate.getDefaultNightMode()
             if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                saveTheme(AppCompatDelegate.MODE_NIGHT_NO)
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                saveTheme(AppCompatDelegate.MODE_NIGHT_YES)
             }
             // Recreate the activity for the theme change to take effect.
             recreate()
@@ -51,11 +58,12 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionToRecordAccepted = if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+        permissionToRecordAccepted = if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION && grantResults.isNotEmpty()) {
             grantResults[0] == PackageManager.PERMISSION_GRANTED
         } else {
             false
         }
+        //TODO find a better way of handling not having the appropriate permissions
         if (!permissionToRecordAccepted) finish()
     }
 
@@ -77,4 +85,17 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.container, MainFragment.newInstance())
             .commitNow()
     }
+
+    private fun setAppTheme(themeMode: Int) {
+        AppCompatDelegate.setDefaultNightMode(themeMode)
+        saveTheme(themeMode)
+    }
+
+    fun initTheme() {
+        setAppTheme(getSavedTheme())
+    }
+
+    private fun saveTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
+
+    private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)
 }

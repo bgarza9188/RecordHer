@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.example.trigmvvm.MainActivity
 import com.example.trigmvvm.R
 import kotlinx.android.synthetic.main.main_fragment.*
 import java.io.IOException
@@ -32,6 +33,7 @@ class MainFragment : Fragment() {
         // if it is not Null
         // then call hide function
         (activity as AppCompatActivity).supportActionBar?.show()
+        (activity as MainActivity).initTheme()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
