@@ -11,40 +11,51 @@
         android:id="@+id/startRec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="Start Recording"/>
+        android:text="Start Rec."/>
 
     <Button
         android:id="@+id/stopRec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/startRec"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="Stop Recording"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/startRec"
+        android:text="Stop Rec."/>
 
     <Button
         android:id="@+id/startPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/stopRec"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="Start Playing"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/stopRec"
+        android:text="Play"/>
 
     <Button
         android:id="@+id/stopPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/startPlay"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/startPlay"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Stop Playing"/>
+        android:text="Stop"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        app:layout_constraintTop_toBottomOf="@id/startRec"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="LinearLayoutManager"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

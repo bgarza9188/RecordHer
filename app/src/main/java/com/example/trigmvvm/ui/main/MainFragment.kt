@@ -9,18 +9,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.example.trigmvvm.CustomAdapter
 import com.example.trigmvvm.MainActivity
 import com.example.trigmvvm.R
 import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.main_fragment.view.*
 import java.io.IOException
 
+val FILE_EXTENSION = ".mp4"
+val FORWARD_SLASH = "/"
 
 class MainFragment : Fragment() {
-    private var fileName: String = ""
+    private var saveDirectoryPath: String = ""
 
     private var recorder: MediaRecorder? = null
 
     private var player: MediaPlayer? = null
+
+    private var adapter = CustomAdapter()
+
+    private var fileNumberSeed = 99
 
     companion object {
         fun newInstance() = MainFragment()
@@ -42,7 +50,17 @@ class MainFragment : Fragment() {
 
 
         // Record to the external cache directory for visibility
-        fileName = "${context?.externalCacheDir?.absolutePath}/audiorecordtest.3gp"
+        saveDirectoryPath = "${context?.externalCacheDir?.absolutePath}" + FORWARD_SLASH + "audiorecordtest" + FILE_EXTENSION
+
+        //for now get list of files found in teh cache dir and add them to the apdater
+        context?.externalCacheDir?.absoluteFile?.list()?.forEach {
+            Log.d("ben", "file: $it")
+            adapter.add(it)
+        }
+        fileNumberSeed = adapter.itemCount
+
+        val recyclerView = view.recycler_view
+        recyclerView.adapter = adapter
 
         return view
     }
@@ -50,13 +68,17 @@ class MainFragment : Fragment() {
     private fun startPlaying() {
         player = MediaPlayer().apply {
             try {
-                setDataSource(fileName)
+                setDataSource(saveDirectoryPath)
                 prepare()
                 start()
             } catch (e: IOException) {
                 Log.e("ben", "prepare() failed")
             }
         }
+    }
+
+    private fun generateFileNameWithPath(): String {
+        return """${context?.externalCacheDir?.absolutePath}${FORWARD_SLASH}audioRecordTest${fileNumberSeed++}$FILE_EXTENSION"""
     }
 
     private fun stopPlaying() {
@@ -67,8 +89,12 @@ class MainFragment : Fragment() {
     private fun startRecording() {
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            setOutputFile(fileName)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            generateFileNameWithPath().also {
+                setOutputFile(it)
+                adapter.add(it)
+                adapter.notifyDataSetChanged()
+            }
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
             try {
